@@ -1,0 +1,28 @@
+QWidget {
+    background-color: rgb(89, 0, 255);
+}
+
+QTableWidget {
+    border: 1px solid #ccc;
+    gridline-color: #aaa;
+}
+
+QTableWidget::indicator { /* Checkbox trong bảng */
+    width: 18px;
+    height: 18px;
+}
+#start_btn{
+    background-color: red;
+}
+QCheckBox#tableCheckbox::indicator {
+    width: 44px;  /* Giảm kích thước checkbox */
+    height: 44px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 3px;
+}
+
+QCheckBox#tableCheckbox::indicator:checked {
+    background-color: green;
+    border: 1px solid darkgreen;
+}

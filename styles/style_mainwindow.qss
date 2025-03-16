@@ -1,0 +1,38 @@
+/* Định dạng nền và font chữ chung */
+QWidget {
+    background-color: #402e33;
+    color: white;
+    font-family: Arial;
+    font-size: 14px;
+}
+
+/* Định dạng cho QPushButton và QToolButton */
+QPushButton, QToolButton {
+    background-color: #4C566A;
+    color: white;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Hiệu ứng hover khi di chuột vào nút */
+QPushButton:hover, QToolButton:hover {
+    background-color: #5E81AC;
+}
+
+/* Định dạng menu thả xuống */
+QMenu {
+    background-color: #3B4252;
+    border: 1px solid #4C566A;
+}
+
+/* Định dạng mục trong menu */
+QMenu::item {
+    padding: 6px 12px;
+    background-color: transparent;
+}
+
+/* Hiệu ứng hover cho menu */
+QMenu::item:selected {
+    background-color: #81A1C1;
+}

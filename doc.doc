@@ -1,0 +1,16 @@
+🛠Công nghệ sử dụng
+    ✅ PyQt6 → Tạo giao diện UI chuyên nghiệp
+    ✅ SQLite → Lưu dữ liệu số giờ học
+    ✅ Matplotlib/PyQtChart → Vẽ biểu đồ thống kê
+    ✅ Pandas → Xuất dữ liệu ra Excel
+
+🚀 Chức năng chính
+    1️⃣ Thêm môn học
+    2️⃣ Bắt đầu/Dừng theo dõi thời gian học
+    3️⃣ Hiển thị số giờ học từng môn
+    4️⃣ Thống kê số giờ học theo ngày/tuần/tháng
+    5️⃣ Xuất dữ liệu ra Excel/PDF
+
+Những gì quan trọng cần lưu ý / Những thứ mói học được
+    1. Các chuyển các tab qua stack rất hay. Dù từng làm rồi những chưa quen, lần này thêm 1 lần làm
+    2. Hôm nay đã học được cách gán id cho từng thành phần và qss cho từng thành phần 1, dùng cách setObjectName vì nó đơn giản và thuận tiện, dễ hiểu
