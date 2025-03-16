@@ -75,10 +75,6 @@ class StudyTrackerApp(QWidget):
 
 
 
-
-
-
-
     def load_data(self):
         if not os.path.exists(os.path.dirname(DATA_FILE)):
             os.makedirs(os.path.dirname(DATA_FILE))
