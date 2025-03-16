@@ -11,8 +11,6 @@ class MainApplicationWindow(QWidget):
         with open("styles/style_mainWindow.qss", "r", encoding="utf-8") as file:
             self.setStyleSheet(file.read())
 
-
-
         self.main_stacked_widget = QStackedWidget()
 
         # Tạo các trang
@@ -23,7 +21,6 @@ class MainApplicationWindow(QWidget):
         self.main_stacked_widget.addWidget(self.study_tracker_page)
         self.main_stacked_widget.addWidget(self.statistics_page)
         
-
         # Tạo nút menu
         self.menu_button = QToolButton(self)
         self.menu_button.setText("Menu")
@@ -36,7 +33,6 @@ class MainApplicationWindow(QWidget):
         study_tracker_action = QAction("Study Tracker", self)
         statistics_action = QAction("Statistics", self)
         
-
         # Kết nối hành động với các hàm xử lý
         study_tracker_action.triggered.connect(lambda: self.main_stacked_widget.setCurrentIndex(0))
         statistics_action.triggered.connect(lambda: self.main_stacked_widget.setCurrentIndex(1))
