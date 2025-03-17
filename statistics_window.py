@@ -1,11 +1,8 @@
 from PyQt6.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QComboBox, QWidget
 from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import json
-import os
 import matplotlib.pyplot as plt
- 
-DATA_FILE = os.path.join(os.getenv("APPDATA"), "StudyTracker", "study_data.json")
+from database import Database  # Import class Database
 
 class MatplotlibCanvas(FigureCanvas):
     def __init__(self, parent=None):
@@ -13,12 +10,15 @@ class MatplotlibCanvas(FigureCanvas):
         super().__init__(self.fig)
         self.setParent(parent)
 
-
 class StatisticsWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Thống kê học tập")
         self.setGeometry(200, 200, 600, 400)
+
+        # Khởi tạo database
+        self.db = Database()  
+        self.db.create_table()  # Đảm bảo bảng đã tồn tại
 
         layout = QVBoxLayout()
 
@@ -49,58 +49,59 @@ class StatisticsWindow(QDialog):
         self.load_data()
 
     def load_data(self):
-        if os.path.exists(DATA_FILE):
-            with open(DATA_FILE, "r") as file:
-                self.data = json.load(file)
-        else:
-            self.data = []
+        """Tải dữ liệu từ database thay vì JSON"""
+        self.db.cursor.execute("SELECT subject, time_spent FROM study_data")
+        self.data = self.db.cursor.fetchall()
 
     def show_pie_chart(self):
+        """Hiển thị biểu đồ tròn"""
         subjects, times = self.get_chart_data()
-        
+
         if not subjects or not times:
             print("⚠️ Không có dữ liệu để hiển thị!")
             return
         
-        # Sắp xếp theo thời gian giảm dần
+        # Sắp xếp dữ liệu theo thời gian giảm dần
         sorted_data = sorted(zip(times, subjects), reverse=True)
         times, subjects = zip(*sorted_data)
-
-        # Chọn màu sắc tự động
-        colors = plt.cm.Paired(range(len(subjects)))
 
         # Xóa biểu đồ cũ
         self.chart_canvas.ax.clear()
 
         # Vẽ biểu đồ tròn
         wedges, texts, autotexts = self.chart_canvas.ax.pie(
-            times, labels=subjects, autopct='%1.1f%%', colors=colors, startangle=140
+            times, labels=subjects, autopct='%1.1f%%', startangle=140
         )
-
-        # Tạo chú thích với màu sắc tương ứng
-        legend_labels = [f"{subjects[i]} - {times[i]} phút ({autotexts[i].get_text()})" for i in range(len(subjects))]
-        self.chart_canvas.ax.legend(wedges, legend_labels, title="Chú thích", loc="best", bbox_to_anchor=(1, 0.5))
 
         # Đặt tiêu đề và vẽ lại biểu đồ
         self.chart_canvas.ax.set_title("Tỷ lệ thời gian học theo môn")
         self.chart_canvas.draw()
 
     def show_bar_chart(self):
+        """Hiển thị biểu đồ cột"""
         subjects, times = self.get_chart_data()
+        
+        if not subjects or not times:
+            print("⚠️ Không có dữ liệu để hiển thị!")
+            return
+
         self.chart_canvas.ax.clear()
         self.chart_canvas.ax.bar(subjects, times, color='skyblue')
+
+        # Đặt tiêu đề và nhãn trục
         self.chart_canvas.ax.set_xlabel("Môn học")
         self.chart_canvas.ax.set_ylabel("Thời gian học (giây)")
         self.chart_canvas.ax.set_title("Thời gian học theo từng môn")
         self.chart_canvas.ax.tick_params(axis='x', rotation=45)
+
+        # Hiển thị biểu đồ
         self.chart_canvas.draw()
 
     def get_chart_data(self):
-        subjects = [entry["subject"] for entry in self.data]
-        times = [self.parse_time(entry["time_spent"]) for entry in self.data]
+        """Trích xuất dữ liệu từ database"""
+        if not self.data:
+            return [], []
+        
+        subjects = [entry[0] for entry in self.data]
+        times = [entry[1] for entry in self.data]
         return subjects, times
-
-    def parse_time(self, time_str):
-        hours, minutes, seconds = map(int, time_str.split(":"))
-        return hours * 3600 + minutes * 60 + seconds
-
